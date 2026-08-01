@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Reading: undefined;
   OldVocab: undefined;
   KanjiGame: undefined;
+  JLPTPractice: undefined;
   About: undefined;
   Website: undefined;
   Search: undefined;

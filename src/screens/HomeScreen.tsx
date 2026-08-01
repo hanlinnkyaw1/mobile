@@ -8,7 +8,7 @@ type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
-type ToolRoute = 'KanjiDecks' | 'Reading' | 'OldVocab' | 'KanjiGame';
+type ToolRoute = 'KanjiDecks' | 'Reading' | 'OldVocab' | 'KanjiGame' | 'JLPTPractice';
 
 const TOOLS: {
   title: string;
@@ -44,6 +44,13 @@ const TOOLS: {
     emoji: '🎯',
     tint: colors.pink,
     route: 'KanjiGame',
+  },
+  {
+    title: 'JLPT practice test',
+    description: 'Full mock exams for N1–N5 — MojiGoi, Reading, and Listening.',
+    emoji: '🎓',
+    tint: '#2563eb',
+    route: 'JLPTPractice',
   },
 ];
 
