@@ -107,8 +107,7 @@ export default function CertificateModal({ visible, onClose, result, time }) {
             <Text style={styles.certLevel}>JLPT {result.level}</Text>
 
             <Text style={styles.certMessage}>
-              あなたは当プラットフォーム主催の模擬試験において{"
-"}
+              あなたは当プラットフォーム主催の模擬試験において{"\n"}
               頭書の成績を収め見事合格されました
             </Text>
 
@@ -151,8 +150,7 @@ export default function CertificateModal({ visible, onClose, result, time }) {
 
             <Text style={styles.certFooter}>
               {dateStr}
-              {"
-"}JLPT Burmese
+              {"\n"}JLPT Burmese
             </Text>
           </View>
         </ScrollView>
