@@ -27,7 +27,7 @@ export default function ListeningSection({ data, answers, onSelectAnswer, isSubm
     <View style={styles.container}>
       <AudioPlayer
         audioUrl={data.audio_src}
-        fallbackUrl={data.aduio_src_fallback}
+        fallbackUrl={data.audio_src_fallback}
         onProgressUpdate={setAudioProgress}
       />
       <View style={styles.progressBar}>

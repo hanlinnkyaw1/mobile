@@ -4,9 +4,11 @@ import { View, Text, StyleSheet } from "react-native";
 import QuestionCard from "../components/QuestionCard";
 
 export default function ReadingSection({ data, answers, onSelectAnswer, isSubmitted }) {
+  const sections = [...(data.section3 || []), ...(data.section4 || [])];
+
   return (
     <View style={styles.container}>
-      {(data.section1 || []).map((section, secIdx) => (
+      {sections.map((section, secIdx) => (
         <View key={secIdx} style={styles.sectionBlock}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{section.title}</Text>

@@ -1,16 +1,38 @@
 // src/features/jlpt-practice/components/TestSelection.js
-import React from "react";
+import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { getAvailableTests } from "../api/testDataLoader";
 
-const LEVELS = [
-  { level: "N1", tests: [1, 2, 3], desc: "Advanced", time: "~110 min" },
-  { level: "N2", tests: [1, 2, 3], desc: "Upper-Int", time: "~105 min" },
-  { level: "N3", tests: [1, 2, 3], desc: "Intermediate", time: "~100 min" },
-  { level: "N4", tests: [1, 2, 3], desc: "Elementary", time: "~75 min" },
-  { level: "N5", tests: [1, 2, 3], desc: "Beginner", time: "~60 min" },
-];
+const LEVEL_META = {
+  N1: { desc: "Advanced", time: "~110 min" },
+  N2: { desc: "Upper-Int", time: "~105 min" },
+  N3: { desc: "Intermediate", time: "~100 min" },
+  N4: { desc: "Elementary", time: "~75 min" },
+  N5: { desc: "Beginner", time: "~60 min" },
+};
 
 export default function TestSelection({ onSelectTest }) {
+  const levels = useMemo(() => {
+    const available = getAvailableTests();
+    const map = {};
+    available.forEach(({ level, testNum }) => {
+      if (!map[level]) map[level] = [];
+      map[level].push(testNum);
+    });
+    return Object.entries(map)
+      .map(([level, tests]) => ({
+        level,
+        tests: tests.sort((a, b) => a - b),
+        desc: LEVEL_META[level]?.desc || "",
+        time: LEVEL_META[level]?.time || "",
+      }))
+      .sort((a, b) => {
+        const aNum = parseInt(a.level.replace("N", ""), 10);
+        const bNum = parseInt(b.level.replace("N", ""), 10);
+        return aNum - bNum;
+      });
+  }, []);
+
   const renderLevel = ({ item }) => (
     <View style={styles.levelBlock}>
       <View style={styles.levelHeader}>
@@ -37,9 +59,17 @@ export default function TestSelection({ onSelectTest }) {
     </View>
   );
 
+  if (levels.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No practice tests available.</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
-      data={LEVELS}
+      data={levels}
       renderItem={renderLevel}
       keyExtractor={(item) => item.level}
       contentContainerStyle={styles.container}
@@ -76,4 +106,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   testBtnText: { color: "#2563eb", fontWeight: "700", fontSize: 14 },
+  emptyContainer: { flex: 1, alignItems: "center", justifyContent: "center", padding: 32 },
+  emptyText: { fontSize: 16, color: "#6b7280", textAlign: "center" },
 });

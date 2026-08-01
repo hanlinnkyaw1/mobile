@@ -148,8 +148,8 @@ export default function JLPTPracticeScreen() {
       }
     });
 
-    // Reading
-    (data.reading.section1 || []).forEach((sec) => {
+    // Reading — data uses section3 and section4
+    [...(data.reading.section3 || []), ...(data.reading.section4 || [])].forEach((sec) => {
       sec.questions?.forEach((q) => {
         const meta = buildScoreMeta(level, "reading", sec.title);
         items.push({
@@ -224,7 +224,7 @@ export default function JLPTPracticeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {activeSection === SECTIONS.MOJIGOI && (
+        {activeSection === SECTIONS.MOJIGOI && currentTest.data.mojiGoi && (
           <MojiGoiSection
             data={currentTest.data.mojiGoi}
             answers={answers}
@@ -232,7 +232,12 @@ export default function JLPTPracticeScreen() {
             isSubmitted={isSubmitted}
           />
         )}
-        {activeSection === SECTIONS.READING && (
+        {activeSection === SECTIONS.MOJIGOI && !currentTest.data.mojiGoi && (
+          <View style={styles.emptySection}>
+            <Text style={styles.emptySectionText}>Moji/Goi section not available for this test.</Text>
+          </View>
+        )}
+        {activeSection === SECTIONS.READING && currentTest.data.reading && (
           <ReadingSection
             data={currentTest.data.reading}
             answers={answers}
@@ -240,13 +245,23 @@ export default function JLPTPracticeScreen() {
             isSubmitted={isSubmitted}
           />
         )}
-        {activeSection === SECTIONS.LISTENING && (
+        {activeSection === SECTIONS.READING && !currentTest.data.reading && (
+          <View style={styles.emptySection}>
+            <Text style={styles.emptySectionText}>Reading section not available for this test.</Text>
+          </View>
+        )}
+        {activeSection === SECTIONS.LISTENING && currentTest.data.listening && (
           <ListeningSection
             data={currentTest.data.listening}
             answers={answers}
             onSelectAnswer={handleSelectAnswer}
             isSubmitted={isSubmitted}
           />
+        )}
+        {activeSection === SECTIONS.LISTENING && !currentTest.data.listening && (
+          <View style={styles.emptySection}>
+            <Text style={styles.emptySectionText}>Listening section not available for this test.</Text>
+          </View>
         )}
 
         <View style={styles.actionArea}>
@@ -304,4 +319,10 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   submitButtonText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  emptySection: {
+    padding: 32,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  emptySectionText: { fontSize: 15, color: "#6b7280", textAlign: "center" },
 });
