@@ -8,7 +8,7 @@ type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
-type ToolRoute = 'KanjiDecks' | 'Reading' | 'OldVocab' | 'KanjiGame' | 'JLPTPractice';
+type ToolRoute = 'KanjiDecks' | 'Reading' | 'OldVocab' | 'KanjiGame' | 'JLPTPractice' | 'GrammarSearch';
 
 const TOOLS: {
   title: string;
@@ -17,6 +17,13 @@ const TOOLS: {
   tint: string;
   route: ToolRoute;
 }[] = [
+  {
+    title: 'Grammar search',
+    description: 'Search and filter grammar patterns by JLPT level.',
+    emoji: '🔍',
+    tint: colors.primary,
+    route: 'GrammarSearch',
+  },
   {
     title: 'Kanji flashcards',
     description: 'JLPT N5–N1 decks plus Kanji Master — readings, meanings, examples.',
@@ -111,9 +118,9 @@ export default function HomeScreen({ navigation }: Props) {
                 styles.heroBtnPrimary,
                 pressed && styles.heroBtnPressed,
               ]}
-              onPress={() => navigation.navigate('Grammar')}
+              onPress={() => navigation.navigate('JLPTWebView')}
             >
-              <Text style={styles.heroBtnPrimaryText}>Grammar dictionary</Text>
+              <Text style={styles.heroBtnPrimaryText}>JLPT mock exam</Text>
             </Pressable>
           </View>
         </View>

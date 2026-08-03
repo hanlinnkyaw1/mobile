@@ -10,6 +10,8 @@ export type RootStackParamList = {
   JLPTPractice: undefined;
   About: undefined;
   Website: undefined;
+  JLPTWebView: undefined;
+  GrammarSearch: undefined;
   Search: undefined;
   Settings: undefined;
 };

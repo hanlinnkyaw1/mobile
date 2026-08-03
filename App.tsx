@@ -15,6 +15,7 @@ import ReadingScreen from './src/screens/ReadingScreen';
 import OldVocabScreen from './src/screens/OldVocabScreen';
 import KanjiGameScreen from './src/screens/KanjiGameScreen';
 import JLPTPracticeScreen from './src/screens/JLPTPracticeScreen';
+import JLPTWebViewScreen from './src/screens/JLPTWebViewScreen';
 import AboutScreen from './src/screens/AboutScreen';
 import WebsiteScreen from './src/screens/WebsiteScreen';
 import SearchScreen from './src/screens/SearchScreen';
@@ -108,6 +109,8 @@ export default function App() {
           <Stack.Screen name="OldVocab" component={OldVocabScreen} options={{ title: 'Old exam vocab' }} />
           <Stack.Screen name="KanjiGame" component={KanjiGameScreen} options={{ title: 'Kanji game' }} />
           <Stack.Screen name="JLPTPractice" component={JLPTPracticeScreen} options={{ title: 'JLPT Practice', headerShown: false }} />
+          <Stack.Screen name="JLPTWebView" component={JLPTWebViewScreen} options={{ title: 'JLPT Mock Exam' }} />
+          <Stack.Screen name="GrammarSearch" component={SearchScreen} options={{ title: 'Grammar Search' }} />
           <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About' }} />
         </Stack.Navigator>
       </NavigationContainer>
