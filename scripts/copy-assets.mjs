@@ -1,40 +1,70 @@
 /**
- * Re-copy JSON study data from the parent web project into assets/data.
- * Run from jlpt-burmese-mobile: node scripts/copy-assets.mjs
+ * Copy study data from the companion website project into this app.
+ *
+ * Usage:
+ *   npm run sync-data -- /path/to/jlptburmese.com
+ *   WEB_ROOT=/path/to/jlptburmese.com npm run sync-data
+ *
+ * If no source is supplied, the script keeps the historical sibling-folder
+ * convention: ../<website project>.
  */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const mobileRoot = path.resolve(__dirname, '..');
-const webRoot = path.resolve(mobileRoot, '..');
-
+const sourceRoot = path.resolve(process.env.WEB_ROOT || process.argv[2] || path.join(mobileRoot, '..'));
 const destBase = path.join(mobileRoot, 'assets', 'data');
 
+function fail(message) {
+  console.error(`\nData sync failed: ${message}`);
+  console.error('Pass the website project path: npm run sync-data -- /path/to/jlptburmese.com');
+  process.exit(1);
+}
+
+function assertDirectory(dir, label) {
+  if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+    fail(`Could not find ${label} at ${dir}`);
+  }
+}
+
 function copyDir(src, dest) {
+  assertDirectory(src, 'source directory');
   fs.mkdirSync(dest, { recursive: true });
   for (const name of fs.readdirSync(src)) {
     const from = path.join(src, name);
     const to = path.join(dest, name);
-    const st = fs.statSync(from);
-    if (st.isDirectory()) copyDir(from, to);
+    const stat = fs.statSync(from);
+    if (stat.isDirectory()) copyDir(from, to);
     else fs.copyFileSync(from, to);
   }
 }
 
+assertDirectory(sourceRoot, 'website project');
 fs.mkdirSync(destBase, { recursive: true });
-for (const f of ['grammarMetadata.json', 'preview.json']) {
-  fs.copyFileSync(path.join(webRoot, f), path.join(destBase, f));
+
+for (const file of ['grammarMetadata.json', 'preview.json']) {
+  const source = path.join(sourceRoot, file);
+  if (!fs.existsSync(source)) fail(`Missing required file ${source}`);
+  fs.copyFileSync(source, path.join(destBase, file));
 }
-copyDir(path.join(webRoot, 'reading'), path.join(destBase, 'reading'));
-const kanjiSrc = path.join(webRoot, 'kanjiFlashCard');
+
+copyDir(path.join(sourceRoot, 'reading'), path.join(destBase, 'reading'));
+copyDir(path.join(sourceRoot, 'oldQVoca', 'vocab'), path.join(destBase, 'vocab'));
+const jlptTestSource = path.join(sourceRoot, 'jlpttest');
+if (fs.existsSync(jlptTestSource)) {
+  copyDir(jlptTestSource, path.join(destBase, 'jlpttest'));
+} else {
+  console.warn(`Warning: optional JLPT test directory not found at ${jlptTestSource}; existing bundled tests were left unchanged.`);
+}
+
+const kanjiSource = path.join(sourceRoot, 'kanjiFlashCard');
+assertDirectory(kanjiSource, 'Kanji data');
 const kanjiDest = path.join(destBase, 'kanji');
 fs.mkdirSync(kanjiDest, { recursive: true });
-for (const name of fs.readdirSync(kanjiSrc)) {
-  if (name.endsWith('.json')) {
-    fs.copyFileSync(path.join(kanjiSrc, name), path.join(kanjiDest, name));
-  }
+for (const name of fs.readdirSync(kanjiSource)) {
+  if (name.endsWith('.json')) fs.copyFileSync(path.join(kanjiSource, name), path.join(kanjiDest, name));
 }
-copyDir(path.join(webRoot, 'oldQVoca', 'vocab'), path.join(destBase, 'vocab'));
-console.log('Copied web JSON into assets/data');
+
+console.log(`Copied website study data into ${destBase}`);

@@ -8,7 +8,8 @@
     "android": "expo start --offline --android",
     "ios": "expo start --offline --ios",
     "web": "expo start --offline --web",
-    "sync-data": "node scripts/copy-assets.mjs"
+    "sync-data": "node scripts/copy-assets.mjs",
+    "validate-data": "node scripts/validate-data.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -23,7 +24,7 @@
     "expo-print": "~15.0.8",
     "expo-sharing": "~14.0.8",
     "expo-status-bar": "~3.0.9",
-    "lucide-react-native": "^0.479.0",
+    "lucide-react-native": "^1.49.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",

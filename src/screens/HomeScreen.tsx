@@ -125,6 +125,13 @@ export default function HomeScreen({ navigation }: Props) {
           </View>
         </View>
 
+        <View style={styles.modeNotice}>
+          <Text style={styles.modeTitle}>Offline study + online exam</Text>
+          <Text style={styles.modeText}>
+            Grammar, Kanji, reading, vocabulary, games, and JLPT Practice are bundled on your device. The website mock exam and listening media may need internet.
+          </Text>
+        </View>
+
         <Text style={styles.sectionLabel}>Study tools</Text>
 
         {TOOLS.map((t) => (
@@ -225,6 +232,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   heroBtnPressed: { opacity: 0.88 },
+  modeNotice: {
+    backgroundColor: colors.successBg,
+    borderColor: colors.success + '45',
+    borderWidth: 1,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.xxl,
+  },
+  modeTitle: { color: colors.success, fontSize: 14, fontWeight: '800' },
+  modeText: { color: colors.text, fontSize: 13, lineHeight: 19, marginTop: spacing.xs },
   sectionLabel: {
     fontSize: 11,
     fontWeight: '700',

@@ -80,6 +80,17 @@ export default function JLPTPracticeScreen() {
       const saved = await AsyncStorage.getItem(STORAGE_KEY(level, testNum));
       if (saved) {
         const data = JSON.parse(saved);
+        if (data.submitted) {
+          Alert.alert(
+            "Previous Result Found",
+            "This test has already been submitted. Start a new attempt?",
+            [
+              { text: "Cancel", style: "cancel" },
+              { text: "Start New", style: "destructive", onPress: () => startNewTest(level, testNum) },
+            ]
+          );
+          return;
+        }
         Alert.alert(
           "Resume Test?",
           "You have a previous attempt saved. Continue where you left off?",
@@ -94,7 +105,7 @@ export default function JLPTPracticeScreen() {
     startNewTest(level, testNum);
   }, [startNewTest, resumeTest]);
 
-  const persistAnswers = useCallback(async (newAnswers, section) => {
+  const persistAnswers = useCallback(async (newAnswers, section, submitted = false) => {
     if (!currentTest) return;
     try {
       await AsyncStorage.setItem(
@@ -102,6 +113,7 @@ export default function JLPTPracticeScreen() {
         JSON.stringify({
           answers: newAnswers,
           activeSection: section,
+          submitted,
           timestamp: Date.now(),
         })
       );
@@ -175,11 +187,12 @@ export default function JLPTPracticeScreen() {
     });
 
     const result = calculateScores(level, items);
+    persistAnswers(answers, activeSection, true);
     setScoreResult(result);
     stopTimer();
     setIsSubmitted(true);
     setShowScore(true);
-  }, [currentTest, answers, stopTimer]);
+  }, [currentTest, answers, activeSection, persistAnswers, stopTimer]);
 
   const handleBackToSelection = useCallback(() => {
     setCurrentTest(null);
